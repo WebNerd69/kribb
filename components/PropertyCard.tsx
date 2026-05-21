@@ -5,7 +5,15 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { formatPrice } from "../lib/utils";
 
-export default function PropertyCard({ property }: { property: Property }) {
+export default function PropertyCard({
+  property,
+  onUnsave,
+  showSave = false,
+}: {
+  property: Property;
+  onUnsave?: () => void;
+  showSave?: boolean;
+}) {
   const router = useRouter();
 
   const [saved, setSaved] = useState(false);
@@ -34,6 +42,12 @@ export default function PropertyCard({ property }: { property: Property }) {
           resizeMode="cover"
         />
       </View>
+      {property.is_sold && (
+        <View className="px-3 py-1 top-4 left-4 rounded-xl bg-red-600 absolute">
+          <Text className="text-zinc-100 font-bold">Sold</Text>
+        </View>
+      )}
+
       <View className="p-4 gap-2 flex w-[60%] justify-between relative">
         <View className="gap-2">
           <Text className="text-lg font-bold">{property.title}</Text>
@@ -43,11 +57,11 @@ export default function PropertyCard({ property }: { property: Property }) {
           </View>
         </View>
 
-        <TouchableOpacity onPress={() => toggleSave()} className="absolute w-24 h-24 top-0 right-0 ">
-          <View
-            
-            className="absolute top-4 right-4"
-          >
+        <TouchableOpacity
+          onPress={() => toggleSave()}
+          className="absolute w-24 h-24 top-0 right-0 "
+        >
+          <View className="absolute top-4 right-4">
             {saved ? (
               <Ionicons name="heart" size={20} color={"red"} />
             ) : (
