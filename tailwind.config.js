@@ -9,7 +9,7 @@ module.exports = {
         primary: "#0E4D92",
         accent: "#F59E0B",
         card: "#1A1A2E",
-        bg:"#fff8ef"
+        bg:"#f5f5f5"
       },
     },
   },

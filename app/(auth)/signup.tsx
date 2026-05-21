@@ -33,6 +33,8 @@ export default function signup() {
     const { error } = await signUp.password({
       emailAddress,
       password,
+      firstName,
+      lastName
     });
     if (error) {
       console.error(JSON.stringify(error, null, 2));

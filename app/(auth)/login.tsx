@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSignIn } from "@clerk/expo";
 import { type Href, Link, useRouter } from "expo-router";
 
@@ -25,14 +25,38 @@ export default function login() {
   const [code, setCode] = useState("");
   const [buttonPressed , setButtonPressed] = useState(false)
 
+  // error handler state
+  const [wrongPass , setWrongPass] =useState(false)
+  const [wrongEmail , setWrongEmail] =useState(false)
+
+  // useeffect
+  useEffect(() => {
+    if(emailAddress === "" && wrongEmail){
+      setWrongEmail(false)
+    }
+
+    if(password === "" && wrongPass){
+      setWrongPass(false)
+    }
+
+  }, [password , emailAddress])
+  
+
   const handleSubmit = async () => {
     setButtonPressed(true)
+    console.log(JSON.stringify(errors))
     const { error } = await signIn.password({
       emailAddress,
       password,
     });
     if (error) {
-      console.error(JSON.stringify(error, null, 2));
+      console.log(error.message);
+      if (error.message.includes("Password is incorrect")){
+        setWrongPass(true)
+      }else if(error.message.includes("Couldn't find your account")){
+        setWrongEmail(true)
+      }
+      setButtonPressed(false)
       return;
     }
 
@@ -102,7 +126,7 @@ export default function login() {
           {/* email input */}
 
           <View className="bg-[#fffaf8] px-5 py-3 rounded-xl">
-            <Text>Email</Text>
+            {wrongEmail?<Text className="text-red-500">Wrong email</Text> : <Text>Email</Text>}
             <TextInput
               keyboardType="email-address"
               className="w-full h-10"
@@ -114,7 +138,7 @@ export default function login() {
 
           {/* password input */}
           <View className="bg-[#fffaf8] px-5 py-3 rounded-xl">
-            <Text>Password</Text>
+            {wrongPass?<Text className="text-red-500">Wrong password</Text>:<Text>Password</Text>}
             <View className="w-full h-10 flex flex-row items-center justify-between">
               <TextInput
                 className="w-[80%] h-10"
