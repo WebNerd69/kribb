@@ -98,11 +98,15 @@ export default function FilterModal({
     if (visible) {
       setLocalType(type);
       setLocalBedrooms(bedrooms);
-      setLocalMax(maxPrice ? String(maxPrice) : "");
-      setLocalMin(minPrice ? String(minPrice) : "");
     }
-  }, [visible, type, bedrooms, maxPrice, minPrice]);
+  }, [visible, type, bedrooms]);
 
+  useEffect(()=>{
+     if(visible){
+                setLocalMax(maxPrice ? String(maxPrice) : "");
+      setLocalMin(minPrice ? String(minPrice) : "");
+     }
+  },[visible , maxPrice, minPrice])
   return (
     <Modal
       visible={visible}
