@@ -54,7 +54,7 @@ export default function FilterModal({
     { label: "House", value: "house" },
     { label: "Studio", value: "studio" },
     { label: "Villa", value: "villa" },
-    { label: "Appartment", value: "appartment" },
+    { label: "Apartment", value: "apartment" },
   ];
 
   const BEDS = [

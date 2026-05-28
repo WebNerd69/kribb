@@ -4,6 +4,7 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useUserStore } from "../../../store/userStore";
 import useUserSync from "../../../hooks/useUserSync";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function _layout() {
   useUserSync();
   const { isAdmin, isLoading } = useUserStore((state) => state);
@@ -17,6 +18,7 @@ export default function _layout() {
   }
 
   return (
+    <SafeAreaView style={{ flex: 1 , paddingHorizontal:16}} className="bg-bg">
     <Tabs
       key={isAdmin ? "admin" : "normal"}
       screenOptions={{
@@ -119,6 +121,7 @@ export default function _layout() {
         }}
       />
     </Tabs>
+    </SafeAreaView>
   );
 }
 

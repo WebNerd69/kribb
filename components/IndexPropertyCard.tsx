@@ -6,20 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatPrice } from "../lib/utils";
 import { useSavedProperty } from "../hooks/useSavedProperty";
 
-export default function PropertyCard({
+export default function IndexPropertyCard({
     property,
-    onUnsave,
-    showSave = false,
+
 }: {
     property: Property;
-    onUnsave?: () => void;
-    showSave?: boolean;
+
 }) {
     const router = useRouter();
-
-
-    const {isSaved , toggleSave , saveLoading} = useSavedProperty(property.id , onUnsave)
-
 
 
     return (
@@ -57,19 +51,6 @@ export default function PropertyCard({
                     </View>
                 </View>
 
-                <TouchableOpacity
-                    onPress={() => toggleSave()}
-                    disabled={saveLoading}
-                    className="absolute w-24 h-24 top-0 right-0 "
-                >
-                    <View className="absolute top-4 right-4">
-                        {isSaved? (
-                            <Ionicons name="heart" size={20} color={"red"} />
-                        ) : (
-                            <Ionicons name="heart-outline" size={20} />
-                        )}
-                    </View>
-                </TouchableOpacity>
 
                 <View className="flex-row justify-between">
                     <Text className="text-primary font-bold text-lg">

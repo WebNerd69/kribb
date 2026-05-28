@@ -1,43 +1,81 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# -----------------------------
+# Dependencies
+# -----------------------------
 node_modules/
 
-# Expo
+# -----------------------------
+# Environment files (IRONCLAD)
+# -----------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+
+# catches:
+# .env
+# .env.local
+# .env.development
+# .env.production
+# .env.staging
+# etc.
+
+# -----------------------------
+# Expo / React Native
+# -----------------------------
 .expo/
+expo-env.d.ts
 dist/
 web-build/
-expo-env.d.ts
 
-# Native
+# Metro
+.metro-health-check*
+
+# Native build folders
+/android
+/ios
+
+# Native secrets / signing
 .kotlin/
-*.orig.*
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
 *.pem
 
-# local env files
-.env*.local
+# -----------------------------
+# Logs / Debug
+# -----------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# typescript
+# -----------------------------
+# OS junk
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# TypeScript
+# -----------------------------
 *.tsbuildinfo
 
-app-example
+# -----------------------------
+# Temporary / merge junk
+# -----------------------------
+*.orig
+*.orig.*
+*.rej
 
-# generated native folders
-/ios
-/android
+# -----------------------------
+# Editor
+# -----------------------------
+.vscode/
+.idea/
+
+# -----------------------------
+# App examples / generated
+# -----------------------------
+app-example/
