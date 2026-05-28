@@ -1,23 +1,21 @@
+import { useUser } from "@clerk/expo";
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import {
     ActivityIndicator,
-    BackHandler,
     FlatList,
     Image,
-    Pressable,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { useUser } from "@clerk/expo";
-import { useFocusEffect, useRouter } from "expo-router";
-import { Property } from "../../../types";
-import { supabaseClient } from "../../../lib/supabase";
-import { Ionicons } from "@expo/vector-icons";
 import FeaturedCard from "../../../components/FeaturedCard";
-import PropertyCard from "../../../components/PropertyCard";
 import IndexPropertyCard from "../../../components/IndexPropertyCard";
+import { getCache, setCache } from "../../../lib/cache";
+import { supabaseClient } from "../../../lib/supabase";
+import { Property } from "../../../types";
 
 export default function index() {
     const { user } = useUser();
@@ -31,21 +29,33 @@ export default function index() {
         setLoading(true);
 
         try {
-            const { data: featuredData } = await supabaseClient
-                .from("properties")
-                .select("*")
-                .eq("is_featured", true)
-                .order("created_at", { ascending: false });
+            const cacheFeaturedData = await getCache("featured");
+            const cacheRecommended = await getCache("recommended");
+            if (cacheFeaturedData) {
+                setFeatured(cacheFeaturedData);
+            } else {
+                const { data: featuredData } = await supabaseClient
+                    .from("properties")
+                    .select("*")
+                    .eq("is_featured", true)
+                    .order("created_at", { ascending: false });
 
-            const { data: recommendedData } = await supabaseClient
-                .from("properties")
-                .select("*")
-                .eq("is_featured", false)
-                .order("created_at", { ascending: false })
-                .limit(20);
+                setFeatured(featuredData ?? []);
+                setCache("featured", featuredData, 600);
+            }
 
-            setFeatured(featuredData ?? []);
-            setrecommended(recommendedData ?? []);
+            if (cacheRecommended) {
+                setrecommended(cacheRecommended);
+            } else {
+                const { data: recommendedData } = await supabaseClient
+                    .from("properties")
+                    .select("*")
+                    .eq("is_featured", false)
+                    .order("created_at", { ascending: false });
+
+                setrecommended(recommendedData ?? []);
+                setCache("recommended", recommendedData, 600);
+            }
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -154,9 +164,7 @@ export default function index() {
                         </Text>
                     </View>
                 }
-                renderItem={({ item }) => (
-                    <IndexPropertyCard property={item}/>
-                )}
+                renderItem={({ item }) => <IndexPropertyCard property={item} />}
             />
         </View>
     );

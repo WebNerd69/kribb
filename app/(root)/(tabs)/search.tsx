@@ -1,3 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -8,16 +11,14 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Property } from "../../../types";
-import { useSearchStore } from "../../../store/searchStore";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { supabaseClient } from "../../../lib/supabase";
-import PropertyCard from "../../../components/PropertyCard";
-import FilterModal from "../../../components/FilterModal";
-import { formatPrice } from "../../../lib/utils";
 import FilterChip from "../../../components/FilterChip";
+import FilterModal from "../../../components/FilterModal";
+import PropertyCard from "../../../components/PropertyCard";
+import { getCache, setCache } from "../../../lib/cache";
+import { supabaseClient } from "../../../lib/supabase";
+import { formatPrice } from "../../../lib/utils";
+import { useSearchStore } from "../../../store/searchStore";
+import { Property } from "../../../types";
 
 export default function search() {
     const [searchInput, setSearchInput] = useState("");
@@ -41,8 +42,23 @@ export default function search() {
         resetFilters,
     } = useSearchStore();
 
+    const CACHE_KEY = "queried_properties";
+    const CACHE_TTL = 600; // 5 minutes
+
     const fetchQueriedProperties = async () => {
         setLoading(true);
+
+        const isUnfiltered = !search && !bedrooms && !type && !minPrice && !maxPrice;
+
+        // return cached data if no filters applied
+        if (isUnfiltered) {
+            const cached = await getCache(CACHE_KEY);
+            if (cached) {
+                setProperties(cached);
+                setLoading(false);
+                return;
+            }
+        }
 
         let query = supabaseClient.from("properties").select("*");
         if (search) {
@@ -62,17 +78,22 @@ export default function search() {
         }
 
         try {
-            const { data: data } = await query
-                .order("created_at", { ascending: false })
-                .limit(20);
-            setProperties(data ? data : []);
+            const { data } = await query.order("created_at", { ascending: false });
+
+            const result = data ?? [];
+            setProperties(result);
+
+            // only cache unfiltered results
+            if (isUnfiltered) {
+                await setCache(CACHE_KEY, result, CACHE_TTL);
+            }
+
             setLoading(false);
         } catch (error) {
             console.log(error);
             setLoading(false);
         }
     };
-
     const activeFilterCount = [
         type !== null,
         bedrooms !== null,

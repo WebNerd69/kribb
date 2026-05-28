@@ -85,7 +85,6 @@ export default function PropertyDetails() {
 
     const handleContact = () => {
         const phone = process.env.EXPO_PUBLIC_AGENT_WHATSAPP_NUMBER;
-        console.log(phone);
         const message = `${property?.images?.[0]}\n\nHi👋 Im interested in the property:\n${property?.title} in ${property?.address} ${property?.city}\nIs it available?`;
         const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
         Linking.openURL(url);
@@ -214,20 +213,20 @@ export default function PropertyDetails() {
 
                 <View className="pt-5 px-5 gap-4 pb-10">
                     <View className="flex-row gap-16">
-                        <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 w-24 justify-center items-center">
+                        <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 justify-center items-center">
                             <Text className="text-blue-600 capitalize">
                                 {property.type}
                             </Text>
                         </View>
                         {property.is_featured && (
-                            <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 w-28 justify-center items-center">
+                            <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 justify-center items-center">
                                 <Text className="text-blue-600 capitalize">
                                     ⭐ Featured
                                 </Text>
                             </View>
                         )}
                         {property.is_sold && (
-                            <View className="px-3 py-1 rounded-full border-2 border-red-600/80 bg-red-100/50 w-24 justify-center items-center">
+                            <View className="px-3 py-1 rounded-full border-2 border-red-600/80 bg-red-100/50 justify-center items-center">
                                 <Text className="text-red-800 capitalize">Sold</Text>
                             </View>
                         )}
