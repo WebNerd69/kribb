@@ -338,14 +338,15 @@ export default function PropertyDetails() {
                             <View className="flex-row gap-5 justify-between">
                                 <TouchableOpacity
                                     onPress={() => handleMarkSold()}
-                                    className="px-5 py-3 rounded-xl border-2 border-orange-500 bg-orange-300/15 flex-row justify-center items-center gap-2 w-[47%]"
+                                    disabled={property.is_sold}
+                                    className={`px-5 py-3 rounded-xl border-2 ${property.is_sold?"border-gray-300 bg-zinc-300/15":"border-orange-500 bg-orange-300/15"} flex-row justify-center items-center gap-2 w-[47%]`}
                                 >
                                     <Ionicons
                                         name="checkmark-done-circle-outline"
                                         size={24}
-                                        color={"#ef4444"}
+                                        color={property.is_sold?"#888":"#ef4444"}
                                     />
-                                    <Text className="text-xl text-orange-600">
+                                    <Text className={`text-xl ${property.is_sold?"text-[#888]":" text-orange-600"}`}>
                                         Mark Sold
                                     </Text>
                                 </TouchableOpacity>

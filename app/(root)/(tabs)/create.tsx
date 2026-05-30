@@ -104,7 +104,9 @@ export default function create() {
                 const filename = `property_${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
 
                 const base64 = assets.base64;
-                const buffer = Uint8Array.from(atob(base64 ?? ""), (c) => c.charCodeAt(0));
+                const buffer = Uint8Array.from(atob(base64 ?? ""), (c) =>
+                    c.charCodeAt(0),
+                );
 
                 const { error } = await authSupabase.storage
                     .from("kribb-property-images")
@@ -263,11 +265,11 @@ export default function create() {
             return Alert.alert("Error", "Failed to list propery please try again.");
         }
 
-        setForm(INITIAL_FORM)
+        setForm(INITIAL_FORM);
 
-        Alert.alert("Success 🎉" ,"Property listed successfully." , [
-            {text:"OK" , onPress:()=>router.replace("/(root)/(tabs)")}
-        ])
+        Alert.alert("Success 🎉", "Property listed successfully.", [
+            { text: "OK", onPress: () => router.replace("/(root)/(tabs)") },
+        ]);
     };
 
     return (
@@ -540,9 +542,13 @@ export default function create() {
                                 }}
                                 className="w-full bg-blue-600 h-16 rounded-2xl justify-center items-center"
                             >
-                                <Text className="text-[#f5f5f5] text-lg font-bold">
-                                    List Property
-                                </Text>
+                                {submitting ? (
+                                    <ActivityIndicator size={"small"} color={"#f5f5f5"} />
+                                ) : (
+                                    <Text className="text-[#f5f5f5] text-lg font-bold">
+                                        List Property
+                                    </Text>
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>

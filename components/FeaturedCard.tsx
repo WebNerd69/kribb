@@ -35,11 +35,11 @@ export default function FeaturedCard({ property }: { property: Property }) {
           <Text className="text-white capitalize">Sold</Text>
         </View>
       )}
-      <View className="px-3 py-2">
-        <Text className="text-xl font-bold">{property.title}</Text>
+      <View className="px-3 py-2 justify-between">
+        <Text className="text-xl font-bold">{property.title.length>20 ?property.title.substring(0,30)+"..." : property.title}</Text>
         <View className=" flex-row items-center opacity-60 pb-3">
           <Ionicons name="location-outline" size={13} />
-          <Text className="text-sm">{`${property.address} , ${property.city}`}</Text>
+          <Text className="text-sm">{`${property.address.length >30 ?property.address.substring(0 ,30) + "...":property.address} , ${property.city}`}</Text>
         </View>
 
         <View className="flex-row justify-between pb-2">
