@@ -1,54 +1,59 @@
 {
-  "expo": {
-    "name": "kribb",
-    "slug": "kribb",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/kribb.png",
-    "scheme": "kribb",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/kribb.png"
-      },
-      "edgeToEdgeEnabled": true,
-      "permissions": [
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
-      ],
-      "package": "com.anonymous.kribb"
-    },
-    "web": {
-      "output": "static"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-location",
-        {
-          "locationWhenInUsePermission": "Allow kribb to access your location to tag property coordinates."
+    "expo": {
+        "name": "kribb",
+        "slug": "kribb",
+        "version": "1.0.0",
+
+        "orientation": "portrait",
+        "icon": "./assets/images/kribb.png",
+        "scheme": "kribb",
+        "userInterfaceStyle": "light",
+        "newArchEnabled": true,
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "backgroundColor": "#ffffff",
+                "foregroundImage": "./assets/images/kribb.png"
+            },
+            "edgeToEdgeEnabled": true,
+            "permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+            ],
+            "package": "com.webnerd69.kribb"
+        },
+        "web": {
+            "output": "static"
+        },
+        "plugins": [
+            "expo-router",
+            [
+                "expo-location",
+                {
+                    "locationWhenInUsePermission": "Allow kribb to access your location to tag property coordinates."
+                }
+            ],
+            [
+                "expo-splash-screen",
+                {
+                    "image": "./assets/images/kribb.png",
+                    "imageWidth": 400,
+                    "resizeMode": "contain",
+                    "backgroundColor": "#ffffff"
+                }
+            ]
+        ],
+        "experiments": {
+            "typedRoutes": true,
+            "reactCompiler": true
+        },
+        "extra": {
+            "router": {},
+            "eas": {
+                "projectId": "7c682657-ccc1-48d7-a2d7-035db4d61959"
+            }
         }
-      ],
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/kribb.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
     }
-  }
 }
