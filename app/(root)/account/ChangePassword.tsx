@@ -46,7 +46,7 @@ export default function ChangePassword() {
                 },
             ]);
         } catch (error) {
-            console.log(JSON.stringify(error));
+            // console.log(JSON.stringify(error));
             if (JSON.stringify(error).includes("Incorrect password")) {
                 Alert.alert("Incorrect password", "Please write the password correctly.");
             }

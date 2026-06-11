@@ -21,7 +21,7 @@ export const useSavedProperty = (propertyId: string, onUnsave?: () => void) => {
                 .single();
             setIsSaved(!!data);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
 

@@ -124,7 +124,7 @@ export default function create() {
                 uploadedURLs.push(urlData.publicUrl);
                 previewURLs.push(assets.uri);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 Alert.alert(
                     "Upload failed:",
                     "One or more images failed to upload please try again.",
@@ -173,7 +173,7 @@ export default function create() {
                 "Couldnot detect coordinates",
                 "Please provide coordinates manually or try again later",
             );
-            console.log(error);
+            // console.log(error);
         } finally {
             setDetectingLocation(false);
         }
@@ -261,7 +261,7 @@ export default function create() {
 
         setSubmitting(false);
         if (error) {
-            console.log(error);
+            // console.log(error);
             return Alert.alert("Error", "Failed to list propery please try again.");
         }
 

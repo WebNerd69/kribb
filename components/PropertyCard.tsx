@@ -50,7 +50,7 @@ export default function PropertyCard({
 
             <View className="p-4 gap-2 flex w-[60%] justify-between relative">
                 <View className="gap-2">
-                    <Text className="text-lg font-bold">{property.title}</Text>
+                    <Text className="text-lg font-bold w-[90%]">{property.title.length>20 ?property.title.substring(0,30)+"..." : property.title}</Text>
                     <View className="flex-row opacity-60">
                         <Ionicons name="location-outline" size={13} />
                         <Text className="text-sm ">{`${property.city}`}</Text>

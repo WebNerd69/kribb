@@ -57,7 +57,8 @@ export default function EditProfile() {
                 },
             ]);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
+            Alert.alert("Error","Name change failed please try again.")
         } finally {
             setLoading(false);
         }

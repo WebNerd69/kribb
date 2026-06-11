@@ -20,14 +20,14 @@ import { Property } from "../../../types";
 
 import { useAuth } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
+import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { useSavedProperty } from "../../../hooks/useSavedProperty";
+import { useSupabase } from "../../../hooks/useSupabase";
 import { supabaseClient } from "../../../lib/supabase";
 import { formatPrice } from "../../../lib/utils";
 import { useUserStore } from "../../../store/userStore";
-import { useSupabase } from "../../../hooks/useSupabase";
-import ImageViewing from "react-native-image-viewing";
 
 export default function PropertyDetails() {
     const { width } = Dimensions.get("window");
@@ -60,7 +60,7 @@ export default function PropertyDetails() {
             setProperty(data);
             setLoading(false);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
         }
     };
@@ -103,7 +103,8 @@ export default function PropertyDetails() {
                             .eq("id", id);
                         setProperty((prev) => (prev ? { ...prev, is_sold: true } : prev));
                     } catch (error) {
-                        console.log(error);
+                        // console.log(error);
+                        Alert.alert("Error","Error while marking sold, please try again.")
                     }
                 },
             },
@@ -121,7 +122,8 @@ export default function PropertyDetails() {
                         await authSupabase.from("properties").delete().eq("id", id);
                         router.replace("/(root)/(tabs)");
                     } catch (error) {
-                        console.log(error);
+                        // console.log(error);
+                        Alert.alert("Error","Error while deleting the property , please try again.")
                     }
                 },
             },
@@ -153,7 +155,7 @@ export default function PropertyDetails() {
     }&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`;
 
     return (
-        <View className="flex-1 p-0">
+        <View className="flex-1 p-0 bg-bg">
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className="w-full h-[300px] relative">
                     <View className="w-full h-full relative">
@@ -164,7 +166,10 @@ export default function PropertyDetails() {
                             pagingEnabled
                             style={{ width, height: 300 }}
                             renderItem={({ item }) => (
-                                <Pressable onPress={()=>setImageViewerVisible(true)} className={`w-[${width}] h-[300px]`}>
+                                <Pressable
+                                    onPress={() => setImageViewerVisible(true)}
+                                    className={`w-[${width}] h-[300px]`}
+                                >
                                     <Image
                                         source={{ uri: item }}
                                         style={{ width, height: 300 }}
@@ -212,22 +217,24 @@ export default function PropertyDetails() {
                 </View>
 
                 <View className="pt-5 px-5 gap-4 pb-10">
-                    <View className="flex-row gap-16">
-                        <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 justify-center items-center">
-                            <Text className="text-blue-600 capitalize">
+                    <View className="flex-row justify-evenly">
+                        <View className="px-3 py-1 rounded-full min-w-24 border border-zinc-800/20 bg-zinc-100/50 justify-center items-center">
+                            <Text className="text-zinc-900 font-semibold tracking-wider capitalize">
                                 {property.type}
                             </Text>
                         </View>
                         {property.is_featured && (
-                            <View className="px-3 py-1 rounded-full border-2 border-blue-600/80 bg-blue-100/50 justify-center items-center">
-                                <Text className="text-blue-600 capitalize">
-                                    ⭐ Featured
+                            <View className="px-3 py-1 rounded-full border border-zinc-800/20 bg-zinc-100/50 min-w-24 justify-center items-center">
+                                <Text className="text-zinc-900 font-semibold tracking-wider capitalize items-center gap-1 justify-center">
+                                    Featured
                                 </Text>
                             </View>
                         )}
                         {property.is_sold && (
-                            <View className="px-3 py-1 rounded-full border-2 border-red-600/80 bg-red-100/50 justify-center items-center">
-                                <Text className="text-red-800 capitalize">Sold</Text>
+                            <View className="px-3 py-1 rounded-full border min-w-24 border-red-600/40 bg-red-100/30 justify-center items-center">
+                                <Text className="text-red-800 capitalize font-semibold">
+                                    Sold
+                                </Text>
                             </View>
                         )}
                     </View>
@@ -324,29 +331,44 @@ export default function PropertyDetails() {
                     <View className="justify-between items-center gap-5 relative pt-5">
                         {/* contact agent */}
 
-                        <TouchableOpacity
-                            onPress={() => handleContact()}
-                            className="px-5 py-3 rounded-xl border-2 border-emerald-600 bg-emerald-200/15 flex-row justify-center items-center gap-2 w-full"
-                        >
-                            <Ionicons name="logo-whatsapp" size={24} color={"#059669"} />
-                            <Text className="text-xl text-emerald-600">
-                                Contact Agent
-                            </Text>
-                        </TouchableOpacity>
+                        {(!isAdmin && !property.is_sold)&& (
+                            <TouchableOpacity
+                                onPress={() => handleContact()}
+                                className="px-5 py-5 rounded-full bg-zinc-900 flex-row justify-center items-center gap-2 w-[70%]"
+                                style={{
+                                    // iOS
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 20,
+                                    },
+                                    shadowOpacity: 0.15,
+                                    shadowRadius: 30,
+
+                                    // Android
+                                    elevation: 20,
+                                }}
+                            >
+                                {/* <Ionicons name="logo-whatsapp" size={24} color={"#059669"} /> */}
+                                <Text className="text-2xl text-bg">Contact Agent</Text>
+                            </TouchableOpacity>
+                        )}
 
                         {isAdmin && (
                             <View className="flex-row gap-5 justify-between">
                                 <TouchableOpacity
                                     onPress={() => handleMarkSold()}
                                     disabled={property.is_sold}
-                                    className={`px-5 py-3 rounded-xl border-2 ${property.is_sold?"border-gray-300 bg-zinc-300/15":"border-orange-500 bg-orange-300/15"} flex-row justify-center items-center gap-2 w-[47%]`}
+                                    className={`px-5 py-3 rounded-xl border-2 ${property.is_sold ? "border-gray-300 bg-zinc-300/15" : "border-orange-500 bg-orange-300/15"} flex-row justify-center items-center gap-2 w-[47%]`}
                                 >
                                     <Ionicons
                                         name="checkmark-done-circle-outline"
                                         size={24}
-                                        color={property.is_sold?"#888":"#ef4444"}
+                                        color={property.is_sold ? "#888" : "#ef4444"}
                                     />
-                                    <Text className={`text-xl ${property.is_sold?"text-[#888]":" text-orange-600"}`}>
+                                    <Text
+                                        className={`text-xl ${property.is_sold ? "text-[#888]" : " text-orange-600"}`}
+                                    >
                                         Mark Sold
                                     </Text>
                                 </TouchableOpacity>
@@ -393,7 +415,7 @@ const SpecsCard = ({
         <View className="gap-1 items-center">
             <Ionicons name={icon} size={24} color={"#0E4D92"} />
             <Text className="text-zinc-900 font-bold">{value}</Text>
-            <Text className="text-zinc-300 text-sm">{label}</Text>
+            <Text className="text-zinc-800/55 text-sm">{label}</Text>
         </View>
     );
 };

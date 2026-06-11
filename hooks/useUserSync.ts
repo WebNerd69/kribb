@@ -31,7 +31,7 @@ const useUserSync = () => {
       return;
     }
     if (error) {
-      console.log("ERROR : ", error);
+      // console.log("ERROR : ", error);
       setIsLoading(false);
     }
 
@@ -52,7 +52,7 @@ const useUserSync = () => {
       setIsLoading(false);
     }
     if (insertError) {
-      console.log("Insert error:", insertError);
+      // console.log("Insert error:", insertError);
       setIsAdmin(false);
       setIsLoading(false);
       return;

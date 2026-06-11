@@ -13,14 +13,14 @@ function FilterChip({ title, removeFilter }: FilterChipProps) {
   return (
     <Pressable
       onPress={removeFilter}
-      className="flex-row items-center gap-2 px-3 py-2 rounded-full border-2 border-blue-400 bg-blue-100"
+      className="flex-row items-center gap-2 px-5 py-2 rounded-full border border-zinc-800/20 bg-zinc-200/30"
     >
-      <Text className="text-blue-800 font-medium">{title}</Text>
+      <Text className="text-zinc-900 font-medium">{title}</Text>
 
       <Ionicons
         name="close"
         size={16}
-        color="#1e40af"
+        color="#18181b"
       />
     </Pressable>
   );

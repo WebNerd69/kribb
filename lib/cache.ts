@@ -7,7 +7,7 @@ export const setCache = async (key: string, data: any, ttl: number) => {
             JSON.stringify({ data: data, expiry: Date.now() + ttl * 1000 }),
         );
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 };
 
@@ -24,6 +24,6 @@ export const getCache = async (key: string) => {
         }
         return parsed.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 };

@@ -1,7 +1,7 @@
 import { useClerk, useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -22,18 +22,22 @@ export default function profile() {
 
     const handleSignOut = async () => {
         try {
+            setIsLoggingOut(true);
+            setIsUserLoading(true);
             await signOut();
             router.replace("/login");
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
 
     const [showDPBig, setShowDPBig] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [userDetails, setUserDetails] = useState<any>();
-    const [isUserLoading, setIsUserLoading] = useState(false);
-
+    const [isUserLoading, setIsUserLoading] = useState(true);
+    const [userName, setUserName] = useState<string | null>();
+    const [userEmail, setUserEmail] = useState<string | null>();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const authSupabase = useSupabase();
 
@@ -86,11 +90,11 @@ export default function profile() {
 
             setUserDetails(userData);
             if (error) {
-                console.log(error);
+                // console.log(error);
                 throw error;
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         } finally {
             setIsUserLoading(false);
         }
@@ -99,6 +103,24 @@ export default function profile() {
     useEffect(() => {
         fetchUserDetails();
     }, [user, isLoaded]);
+
+    useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        setUserName(`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim());
+
+        setUserEmail(user.primaryEmailAddress?.emailAddress ?? "");
+    }, [user]);
+
+    if (isUserLoading || isLoggingOut) {
+        return (
+            <SafeAreaView className="w-full h-full items-center justify-center">
+                <ActivityIndicator size={"large"} color={"black"} />
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="px-5 relative items-center" style={{ height: 800 }}>
@@ -138,8 +160,10 @@ export default function profile() {
                 )}
 
                 <View className="items-center gap-1 pt-5">
-                    <Text className="text-2xl font-bold">{`${user?.firstName} ${user?.lastName}`}</Text>
-                    <Text className="text-lg font-semibold text-zinc-500">{`${user?.emailAddresses}`}</Text>
+                    <Text className="text-2xl font-bold">{userName}</Text>
+                    <Text className="text-lg font-semibold text-zinc-500">
+                        {userEmail}
+                    </Text>
                 </View>
             </View>
             <View className=" gap-4 px-3 w-full mt-5">
@@ -190,7 +214,10 @@ export default function profile() {
                         <Text className="font-bold text-zinc-500">Account</Text>
                     </View>
                     <View className="bg-white/50 rounded-2xl border border-zinc-300 p-4">
-                        <TouchableOpacity onPress={()=>router.push("/(root)/account/EditProfile")} className="flex-row justify-between items-center border-b border-zinc-200 pb-3">
+                        <TouchableOpacity
+                            onPress={() => router.push("/(root)/account/EditProfile")}
+                            className="flex-row justify-between items-center border-b border-zinc-200 pb-3"
+                        >
                             <View className="flex-row gap-3 items-center">
                                 <Ionicons
                                     name="person-outline"
@@ -213,7 +240,10 @@ export default function profile() {
                                 color={"#dadada"}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>router.push("/(root)/account/ChangePassword")} className="flex-row justify-between items-center pt-3">
+                        <TouchableOpacity
+                            onPress={() => router.push("/(root)/account/ChangePassword")}
+                            className="flex-row justify-between items-center pt-3"
+                        >
                             <View className="flex-row gap-3 items-center">
                                 <Ionicons
                                     name="lock-closed-outline"
@@ -236,7 +266,6 @@ export default function profile() {
                                 color={"#dadada"}
                             />
                         </TouchableOpacity>
-                       
                     </View>
                 </View>
                 <View className="gap-3">
@@ -244,8 +273,10 @@ export default function profile() {
                         <Text className="font-bold text-zinc-500">Support</Text>
                     </View>
                     <View className="bg-white/50 rounded-2xl border border-zinc-300 p-4">
-                        <TouchableOpacity onPress={()=>router.push("/(root)/support/Help")
-                        } className="flex-row justify-between items-center pb-3 border-b border-zinc-200">
+                        <TouchableOpacity
+                            onPress={() => router.push("/(root)/support/Help")}
+                            className="flex-row justify-between items-center pb-3 border-b border-zinc-200"
+                        >
                             <View className="flex-row gap-3 items-center">
                                 <Ionicons
                                     name="help-circle-outline"
@@ -268,7 +299,10 @@ export default function profile() {
                                 color={"#dadada"}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>router.push("/(root)/support/About")} className="flex-row justify-between items-center pt-3">
+                        <TouchableOpacity
+                            onPress={() => router.push("/(root)/support/About")}
+                            className="flex-row justify-between items-center pt-3"
+                        >
                             <View className="flex-row gap-3 items-center">
                                 <Ionicons
                                     name="information-circle-outline"

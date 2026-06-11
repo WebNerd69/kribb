@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     Image,
     Pressable,
     StyleSheet,
@@ -41,13 +42,11 @@ export default function login() {
 
     const handleSubmit = async () => {
         setButtonPressed(true);
-        console.log(JSON.stringify(errors));
         const { error } = await signIn.password({
             emailAddress,
             password,
         });
         if (error) {
-            console.log(error.message);
             if (error.message.includes("Password is incorrect")) {
                 setWrongPass(true);
             } else if (error.message.includes("Couldn't find your account")) {
@@ -61,7 +60,6 @@ export default function login() {
             await signIn.finalize({
                 navigate: ({ session, decorateUrl }) => {
                     if (session?.currentTask) {
-                        console.log(session?.currentTask);
                         return;
                     }
                     const url = decorateUrl("/");
@@ -83,7 +81,8 @@ export default function login() {
                 setButtonPressed(false);
             }
         } else {
-            console.error("Sign-in attempt not complete:", signIn);
+            // console.error("Sign-in attempt not complete:", signIn);
+            Alert.alert("Login Failed","Login failed please try again.")
         }
     };
 
@@ -95,7 +94,6 @@ export default function login() {
             await signIn.finalize({
                 navigate: ({ session, decorateUrl }) => {
                     if (session?.currentTask) {
-                        console.log(session?.currentTask);
                         return;
                     }
 
@@ -106,7 +104,7 @@ export default function login() {
                 },
             });
         } else {
-            console.error("Sign-in attempt not complete:", signIn);
+            Alert.alert("Login failed","Login failed please try again.")
         }
     };
 

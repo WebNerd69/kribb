@@ -34,7 +34,7 @@ export default function saved() {
             setSaved((data as unknown as SavedProperties[]) ?? []);
             setLoading(false);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
         }
     }, [userId]);

@@ -1,7 +1,7 @@
-import { useUser } from "@clerk/expo";
+import { useAuth, useUser } from "@clerk/expo";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -24,6 +24,7 @@ export default function index() {
     const [featured, setFeatured] = useState<Property[]>([]);
     const [recommended, setrecommended] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
+    const { isSignedIn } = useAuth();
 
     const fetchData = async () => {
         setLoading(true);
@@ -58,7 +59,7 @@ export default function index() {
             }
             setLoading(false);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false);
         }
     };
@@ -68,6 +69,12 @@ export default function index() {
             fetchData();
         }, []),
     );
+
+    useEffect(() => {
+        if (!isSignedIn) {
+            router.replace("/login");
+        }
+    }, [isSignedIn]);
 
     return (
         <View className="w-full h-full">
